@@ -1,0 +1,4 @@
+services:
+    studiosite_monitoring.parameter_collection:
+        public: true
+        class: StudioSite\MonitoringBundle\Parameter\ParameterCollection

@@ -1,0 +1,34 @@
+{
+    "name": "studiosite/monitoring-bundle",
+    "description": "Bundle for monitoring the simple parameters in yours projects",
+    "keywords": [ "zabbix", "monitoring" ],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "homepage": "https://github.com/eugenekkh/MonitoringBundle",
+    "authors": [
+        {
+            "name": "Evgeny Kukharik",
+            "email": "jonegkk9@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^5.5.9 || ^7.0",
+        "symfony/framework-bundle": "~2.7|~3.0",
+        "symfony/twig-bundle": "^2.7 || ^3.0",
+        "twig/twig": "^1.28 || ^2.0",
+        "symfony/templating": "^2.7 || ^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": { "StudioSite\\MonitoringBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": { "Tests\\": "Tests/" }
+    }
+}
