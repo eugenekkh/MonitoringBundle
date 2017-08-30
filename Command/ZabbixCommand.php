@@ -12,82 +12,44 @@ use Symfony\Component\Console\Question\Question;
 
 class ZabbixCommand extends ContainerAwareCommand
 {
-    protected $destinations = [
-        '/etc/zabbix/zabbix_agentd.conf.d',
-        '/etc/zabbix/zabbix_agentd.d',
-        '/usr/local/etc/zabbix/zabbix_agentd.conf.d'
-    ];
-
     protected function configure()
     {
         $this
             ->setName('studiosite:monitoring:zabbix')
             ->setDescription('Generate zabbix config for collected parameters')
             ->addArgument(
-                'name',
-                InputArgument::OPTIONAL,
-                'Name of the config file'
+                'path',
+                InputArgument::REQUIRED,
+                'Path to the config file'
             )
             ->addOption(
-                'destination',
-                'd',
-                InputOption::VALUE_REQUIRED,
-                'Destination path for the config file'
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Dont\'s ask confirmation of create the config file'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $this->getConfigName($input, $output);
+        $path = $input->getArgument('path');
 
-        $destination = $this->getConfigDestination($input, $output);
-        $destination = rtrim($destination, "/") . '/' . $name;
+        if (!$input->getOption('force')) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion(
+                'Write config to '.$path.'? ',
+                false,
+                '/^(y|j)/i'
+            );
 
-        $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion(
-            'Write config to ' . $destination . '? ',
-            false,
-            '/^(y|j)/i'
-        );
-
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<comment>You canceled write the config file</comment>');
-            return;
-        }
-
-        $this->writeConfig($destination);
-    }
-
-    protected function getConfigName(InputInterface $input, OutputInterface $output)
-    {
-        return ($input->getArgument('name')) ?: 'symfony.conf';
-    }
-
-    protected function getConfigDestination(InputInterface $input, OutputInterface $output)
-    {
-        if ($input->getOption('destination')) {
-            return $input->getOption('destination');
-        } else {
-            foreach ($this->destinations as $_destination) {
-                if (is_dir($_destination)) {
-                    return $_destination;
-                }
+            if (!$helper->ask($input, $output, $question)) {
+                $output->writeln('<comment>You canceled write the config file</comment>');
+                return;
             }
         }
 
-        $helper = $this->getHelper('question');
-
-        $question = new Question('Please enter destination path of the config file: ');
-        $question->setValidator(function ($value) {
-            if (!is_dir($value)) {
-                throw new \Exception('The destination not exists');
-            }
-
-            return $value;
-        });
-
-        return $helper->ask($input, $output, $question);
+        $this->writeConfig($path);
     }
 
     protected function writeConfig($destination)

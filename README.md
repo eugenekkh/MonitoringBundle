@@ -114,7 +114,7 @@ Generate zabbix user parameter config
 The bundle can generate a configuration for all the collected parameters in zabbix userparameter format
 
 ```console
-$ php bin/console studiosite:monitoring:zabbix symfony.conf --destination=/etc/zabbix/conf.d/
+$ php bin/console studiosite:monitoring:zabbix /etc/zabbix/conf.d/symfony.conf
 Write config to /etc/zabbix/conf.d/symfony.conf? y
 
 $ cat /etc/zabbix/conf.d/symfony.conf
