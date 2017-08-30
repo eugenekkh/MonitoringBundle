@@ -122,5 +122,3 @@ UserParameter=app.some_value[*], /var/www/dev/bin/console studiosite:monitoring:
 UserParameter=app.count[*], /var/www/dev/bin/console studiosite:monitoring:get app.count --no-debug -e prod
 UserParameter=app.sum[*], /var/www/dev/bin/console studiosite:monitoring:get app.sum $1 $2 --no-debug -e prod
 ```
-
-See the studiosite:monitoring:zabbix command source code for more features
