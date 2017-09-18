@@ -39,7 +39,7 @@ class AppKernel extends Kernel
 Step 3: Configuration
 -------------------------------------
 ```yml
-studiosite_monitoring:
+studio_site_monitoring:
     # path to console file for zabbix config generator
     # usually the bundle finds the desired path
     console: "%kernel.root_dir%/../bin/console"
