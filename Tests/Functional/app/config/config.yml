@@ -1,0 +1,30 @@
+framework:
+    secret: test
+    test: ~
+    templating:
+        engines:
+            twig
+
+services:
+    _defaults:
+        public: true
+
+    logger: { class: Psr\Log\NullLogger }
+    predis: { class: Predis\Client }
+
+    StudioSite\MonitoringBundle\Command\GetCommand:
+        tags:
+            - { name: 'console.command' }
+
+    StudioSite\MonitoringBundle\Command\ZabbixCommand:
+        tags:
+            - { name: 'console.command' }
+
+    test.monitor:
+        class: Tests\TestService
+        tags:
+            - { name: studiosite_monitoring.parameter, method: getParameter, key: parameter }
+            - { name: studiosite_monitoring.parameter, method: getParameterWithArguments, key: parameter_with_argument }
+
+studio_site_monitoring:
+    console: '%kernel.root_dir%/../../test.bin'

@@ -14,13 +14,14 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^5.5.9 || ^7.0",
-        "symfony/framework-bundle": "~2.7|~3.0",
-        "symfony/twig-bundle": "^2.7 || ^3.0",
+        "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
+        "symfony/twig-bundle": "^2.7 || ^3.0 || ^4.0",
         "twig/twig": "^1.28 || ^2.0",
-        "symfony/templating": "^2.7 || ^3.0"
+        "symfony/templating": "^2.7 || ^3.0 || ^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0"
+        "phpunit/phpunit": "^6.0",
+        "symfony/yaml": "^4.0"
     },
     "autoload": {
         "psr-4": { "StudioSite\\MonitoringBundle\\": "" },

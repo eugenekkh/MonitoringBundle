@@ -2,3 +2,13 @@ services:
     studiosite_monitoring.parameter_collection:
         public: true
         class: StudioSite\MonitoringBundle\Parameter\ParameterCollection
+
+    StudioSite\MonitoringBundle\Command\GetCommand:
+        public: true
+        tags:
+            - { name: 'console.command' }
+
+    StudioSite\MonitoringBundle\Command\ZabbixCommand:
+        public: true
+        tags:
+            - { name: 'console.command' }

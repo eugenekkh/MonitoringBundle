@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Parameter;
+namespace Tests;
 
 use StudioSite\MonitoringBundle\Parameter\ParameterCollection;
 use PHPUnit\Framework\TestCase;
