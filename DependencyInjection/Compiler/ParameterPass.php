@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ParameterPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('studiosite_monitoring.parameter_collection')) {
             return;

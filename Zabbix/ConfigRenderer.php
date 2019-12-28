@@ -31,7 +31,7 @@ class ConfigRenderer implements ConfigRendererInterface
             );
         }
 
-        return implode(PHP_EOL, $rows);
+        return implode(PHP_EOL, $rows) . PHP_EOL;
     }
 
     private function buildArguments(array $arguments): string
@@ -47,6 +47,6 @@ class ConfigRenderer implements ConfigRendererInterface
             $items[] = '$' . $i++;
         }
 
-        return ' '.implode(', ', $items);
+        return ' '.implode(' ', $items);
     }
 }
