@@ -23,8 +23,7 @@ class AppKernel extends Kernel
     {
         return [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \StudioSite\MonitoringBundle\StudioSiteMonitoringBundle(),
-            new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \StudioSite\MonitoringBundle\StudioSiteMonitoringBundle()
         ];
     }
 

@@ -1,3 +1,0 @@
-{% for key, arguments in list %}
-UserParameter={{ key }}[*], {{ bin_file }} studiosite:monitoring:get {{ key }}{% for argument in arguments %} ${{ loop.index }}{% endfor %}
-{% endfor %}

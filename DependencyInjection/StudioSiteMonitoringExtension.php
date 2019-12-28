@@ -2,10 +2,11 @@
 
 namespace StudioSite\MonitoringBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -26,6 +27,5 @@ class StudioSiteMonitoringExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('studiosite_monitoring.console_path', $config['console']);
-        $container->setParameter('studiosite_monitoring.zabbix.template', $config['zabbix']['template']);
     }
 }

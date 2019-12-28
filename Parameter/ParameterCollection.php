@@ -2,6 +2,10 @@
 
 namespace StudioSite\MonitoringBundle\Parameter;
 
+use InvalidArgumentException;
+use LogicException;
+use ReflectionClass;
+
 /**
  * Collection of the monitored parameters
  */
@@ -13,27 +17,27 @@ class ParameterCollection
     private $parameters = [];
 
     /**
-     * Add parameter to the container
+     * Add the monitoring parameter to the collection
      *
      * @param object $service
      * @param string $method
      * @param string $key
      */
-    public function addParameter($service, $method, $key)
+    public function addParameter($service, string $method, string $key): void
     {
         if (!is_object($service)) {
-            throw new \LogicException('Service must be object');
+            throw new LogicException('Service must be object');
         }
 
         if (!is_callable([$service, $method])) {
-            throw new \LogicException(sprintf(
+            throw new LogicException(sprintf(
                 'Method "%s" not callable',
                 $method
             ));
         }
 
         if (isset($this->parameters[$key])) {
-            throw new \LogicException(sprintf('Key with name "%s" already added', $key));
+            throw new LogicException(sprintf('Key with name "%s" already added', $key));
         }
 
         $this->parameters[$key] = [
@@ -43,20 +47,20 @@ class ParameterCollection
     }
 
     /**
-     * Get list of argument of parameter by name
+     * Get list of argument of the monitoring parameter by name
      *
      * @param string $key
      *
      * @return string[]
      */
-    public function getArguments($key)
+    public function getArguments(string $key): array
     {
         if (!isset($this->parameters[$key])) {
-            throw new \InvalidArgumentException('');
+            throw new InvalidArgumentException('');
         }
 
         $call = $this->parameters[$key];
-        $serviceReflection = new \ReflectionClass($call[0]);
+        $serviceReflection = new ReflectionClass($call[0]);
         $methodReflection = $serviceReflection->getMethod($call[1]);
         $reflectionParameters = $methodReflection->getParameters();
 
@@ -69,11 +73,11 @@ class ParameterCollection
     }
 
     /**
-     * Get list of commands and their arguments
+     * Get list of monitoring parameter and their arguments
      *
      * @return string[]
      */
-    public function getList()
+    public function getList(): array
     {
         $result = [];
         foreach ($this->parameters as $key => $parameter) {
@@ -86,16 +90,16 @@ class ParameterCollection
     }
 
     /**
-     * Get list of commands and their arguments
+     * Get value of the monitoring parameter
      *
      * @return string[]
      */
-    public function getValue($key, array $arguments = [])
+    public function getValue(string $key, array $arguments = []): string
     {
         if (!isset($this->parameters[$key])) {
-            throw new \InvalidArgumentException(sprintf('Parameter %s not found', $key));
+            throw new InvalidArgumentException(sprintf('Parameter %s not found', $key));
         }
 
-        return call_user_func_array($this->parameters[$key], $arguments);
+        return (string) call_user_func_array($this->parameters[$key], $arguments);
     }
 }

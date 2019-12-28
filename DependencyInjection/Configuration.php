@@ -23,12 +23,6 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('console')->defaultValue(null)->end()
-                ->arrayNode('zabbix')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('template')->defaultValue('StudioSiteMonitoringBundle:Zabbix:userParameters.conf.twig')->end()
-                    ->end()
-                ->end()
             ->end();
 
         return $treeBuilder;

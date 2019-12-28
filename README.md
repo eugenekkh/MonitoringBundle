@@ -43,9 +43,6 @@ studio_site_monitoring:
     # path to console file for zabbix config generator
     # usually the bundle finds the desired path
     console: "%kernel.root_dir%/../bin/console"
-    zabbix:
-        # template for generating zabbix config
-        template: "StudioSiteMonitoringBundle:Zabbix:userParameters.conf.twig"
 ```
 
 Example of use

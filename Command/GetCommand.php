@@ -2,18 +2,28 @@
 
 namespace StudioSite\MonitoringBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use StudioSite\MonitoringBundle\Parameter\ParameterCollection;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GetCommand extends ContainerAwareCommand
+class GetCommand extends Command
 {
-    protected function configure()
+    /**
+     * @var ParameterCollection
+     */
+    private $parameterCollection;
+
+    public function setParameterCollection(ParameterCollection $parameterCollection): void
+    {
+        $this->parameterCollection = $parameterCollection;
+    }
+
+    protected function configure(): void
     {
         $this
-            ->setName('studiosite:monitoring:get')
             ->setDescription('Get value of parameter')
             ->addArgument(
                 'name',
@@ -26,7 +36,7 @@ class GetCommand extends ContainerAwareCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         if ($input->getArgument('name')) {
             $this->printValue($input, $output);
@@ -35,16 +45,11 @@ class GetCommand extends ContainerAwareCommand
         }
     }
 
-    private function getParameterCollection()
-    {
-        return $this->getContainer()->get('studiosite_monitoring.parameter_collection');
-    }
-
-    private function printList(InputInterface $input, OutputInterface $output)
+    private function printList(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln('The list of available parameters:');
 
-        $list = $this->getParameterCollection()->getList();
+        $list = $this->parameterCollection->getList();
         foreach ($list as $name => $arguments) {
             array_walk($arguments, function (&$argument) {
                 $argument = '<'.$argument.'>';
@@ -53,9 +58,9 @@ class GetCommand extends ContainerAwareCommand
         }
     }
 
-    private function printValue(InputInterface $input, OutputInterface $output)
+    private function printValue(InputInterface $input, OutputInterface $output): void
     {
-        $value = $this->getParameterCollection()->getValue($input->getArgument('name'), $input->getArgument('arguments'));
+        $value = $this->parameterCollection->getValue($input->getArgument('name'), $input->getArgument('arguments'));
         $output->write($value);
     }
 }

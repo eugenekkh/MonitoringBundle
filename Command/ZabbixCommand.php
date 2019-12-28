@@ -2,20 +2,53 @@
 
 namespace StudioSite\MonitoringBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+
+use StudioSite\MonitoringBundle\Parameter\ParameterCollection;
+use StudioSite\MonitoringBundle\Zabbix\ConfigRendererInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Filesystem\Filesystem;
 
-class ZabbixCommand extends ContainerAwareCommand
+class ZabbixCommand extends Command
 {
+    /**
+     * @var ConfigRenderInterface
+     */
+    private $configRenderer;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var ParameterCollection
+     */
+    private $parameterCollection;
+
+    public function setConfigRenderer(ConfigRendererInterface $configRenderer): void
+    {
+        $this->configRenderer = $configRenderer;
+    }
+
+    public function setFilesystem(Filesystem $filesystem): void
+    {
+        $this->filesystem = $filesystem;
+    }
+
+    public function setParameterCollection(ParameterCollection $parameterCollection): void
+    {
+        $this->parameterCollection = $parameterCollection;
+    }
+
     protected function configure()
     {
         $this
-            ->setName('studiosite:monitoring:zabbix')
             ->setDescription('Generate zabbix config for collected parameters')
             ->addArgument(
                 'path',
@@ -49,43 +82,9 @@ class ZabbixCommand extends ContainerAwareCommand
             }
         }
 
-        $this->writeConfig($path);
-    }
-
-    protected function writeConfig($destination)
-    {
-        $parameterCollection = $this->getContainer()->get('studiosite_monitoring.parameter_collection');
-        $template = $this->getContainer()->getParameter('studiosite_monitoring.zabbix.template');
-        $list = $parameterCollection->getList();
-        $content = $this->getContainer()->get('templating')->render($template, [
-            'bin_file' => $this->getConsolePath(),
-            'list' => $list
-        ]);
-
-        $filesystem = $this->getContainer()->get('filesystem');
-        $filesystem->dumpFile($destination, $content);
-    }
-
-    protected function getConsolePath()
-    {
-        $path = $this->getContainer()->getParameter('studiosite_monitoring.console_path');
-
-        if ($path) {
-            return realpath($path);
-        }
-
-        $path = $this->getContainer()->getParameter('kernel.root_dir');
-
-        $path1 = $path.'/../bin/console';
-        if (file_exists($path1)) {
-            return realpath($path1);
-        }
-
-        $path2 = $path.'/../app/console';
-        if (file_exists($path2)) {
-            return realpath($path2);
-        }
-
-        throw new \RuntimeException('Path to executable file of the console can not be detected. Please set it manual in bundle config (studiosite_monitoring.console_path)');
+        $this->filesystem->dumpFile(
+            $path,
+            $this->configRenderer->render($this->parameterCollection)
+        );
     }
 }

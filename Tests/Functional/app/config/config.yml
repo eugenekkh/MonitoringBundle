@@ -1,9 +1,6 @@
 framework:
     secret: test
     test: ~
-    templating:
-        engines:
-            twig
 
 services:
     _defaults:
@@ -11,14 +8,6 @@ services:
 
     logger: { class: Psr\Log\NullLogger }
     predis: { class: Predis\Client }
-
-    StudioSite\MonitoringBundle\Command\GetCommand:
-        tags:
-            - { name: 'console.command' }
-
-    StudioSite\MonitoringBundle\Command\ZabbixCommand:
-        tags:
-            - { name: 'console.command' }
 
     test.monitor:
         class: Tests\TestService

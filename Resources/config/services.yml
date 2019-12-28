@@ -1,14 +1,31 @@
 services:
+    _defaults:
+        public: false
+
+    studiosite_monitoring.console_path_resolver:
+        class: StudioSite\MonitoringBundle\Helper\ConsolePathResolver
+        arguments:
+            - '%kernel.root_dir%'
+            - '%studiosite_monitoring.console_path%'
+
     studiosite_monitoring.parameter_collection:
-        public: true
         class: StudioSite\MonitoringBundle\Parameter\ParameterCollection
 
+    studiosite_monitoring.zabbix_config_renderer:
+        class: StudioSite\MonitoringBundle\Zabbix\ConfigRenderer
+        arguments:
+            - '@studiosite_monitoring.console_path_resolver'
+
     StudioSite\MonitoringBundle\Command\GetCommand:
-        public: true
+        calls:
+            - { method: setParameterCollection, arguments: ['@studiosite_monitoring.parameter_collection'] }
         tags:
-            - { name: 'console.command' }
+            - { name: 'console.command', command: 'studiosite:monitoring:get' }
 
     StudioSite\MonitoringBundle\Command\ZabbixCommand:
-        public: true
+        calls:
+            - { method: setConfigRenderer, arguments: ['@studiosite_monitoring.zabbix_config_renderer'] }
+            - { method: setFilesystem, arguments: ['@filesystem'] }
+            - { method: setParameterCollection, arguments: ['@studiosite_monitoring.parameter_collection'] }
         tags:
-            - { name: 'console.command' }
+            - { name: 'console.command', command: 'studiosite:monitoring:zabbix' }
